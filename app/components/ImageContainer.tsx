@@ -21,6 +21,7 @@ function ImageContainer(props) {
                 alt={props.photo.alt_description || "Image"}
                 width={props.photo.width}
                 height={props.photo.height}
+                className="object-cover w-full h-full"
             />
             <button className="absolute hidden group-hover:block top-2 right-2 p-2 bg-gray-100/30 rounded-full hover:bg-gray-200">
                 <BsBookmarkHeart className="text-gray-500" />

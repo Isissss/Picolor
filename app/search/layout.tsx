@@ -11,7 +11,7 @@ export default function RootLayout({ children, }: { children: React.ReactNode })
             <div className="flex-1 p-4  xl:mx-36">
                 <Search />
                 <div> {children}</div>
-                <
+
             </div>
         </main>
     )
