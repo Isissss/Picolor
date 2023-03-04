@@ -7,7 +7,10 @@
   },
   "dependencies": {
     "next": "latest",
+    "node-vibrant": "^3.1.6",
+    "plaiceholder": "^2.5.0",
     "react": "18.2.0",
+    "react-blurhash": "^0.3.0",
     "react-dom": "18.2.0"
   },
   "devDependencies": {
