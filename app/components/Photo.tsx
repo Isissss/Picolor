@@ -39,33 +39,26 @@ function Photo(props) {
 
 
     return (
-        <div key={photo.id} className="group flex flex-col justify-items-center bg-slate-800 rounded-lg ring-2 ring-slate-900/5 shadow-md">
+
+        <div className="hover:scale-105 group flex flex-col justify-items-center bg-slate-800 rounded-lg ring-2 ring-slate-900/5 shadow-md">
             <div className="relative">
 
-                <button onClick={copyColors} className="hidden group-hover:block absolute top-2 right-2 p-2 bg-gray-100 rounded-full hover:bg-gray-200"> <BsBookmarkHeart className="text-gray-500" /> </button>
                 <ImageContainer photo={photo} />
 
             </div>
-
-
-            <a
-                className="credit text-sky-400 text-center h-10 text-sm  align-middle"
-                target="_blank"
-                href={`https://unsplash.com/@${photo.user.username}`}
-            >
-                Author <span className="italic underline">{photo.user.name}</span> via Unsplash
-            </a>
-            <div className="rounded-sm">
-                Colorlist:
-
-                <Suspense fallback={<div>Loading...</div>}>
-                    {/* @ts-ignore */}
-                    <ColorList url={photo.urls.regular} />
-                </Suspense>
+            <div className="credit text-sky-400 text-center h-10 text-sm text-center place-items-center content-center flex" >
+                <p className="w-full py-2">
+                    <a target="_blank" href={`https://unsplash.com/@${photo.user.username}?utm_source=picolor&utm_medium=referral`}
+                    >
+                        Author <span className="italic underline">{photo.user.name}</span> </a> via <a href={`https://unsplash.com?utm_source=picolor&utm_medium=referral`}><span className="italic underline">Unsplash</span>
+                    </a>
+                </p>
             </div>
-
-
+            <div className=" ">
+                <ColorList colors={photo.colors} />
+            </div>
         </div >
+
     )
 }
 

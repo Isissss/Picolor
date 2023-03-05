@@ -9,13 +9,13 @@ export default function Error({
     reset: () => void;
 }) {
     useEffect(() => {
-        console.error(error);
+
     }, [error]);
 
     return (
         <div>
             <h1>Oops!</h1>
-            <button onClick={reset}>Try again</button>
+            <button onClick={reset}>As this is a demo app we likely got Rate-limited. Apologies for the issue! </button>
         </div>
     );
 }

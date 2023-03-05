@@ -9,7 +9,7 @@ function Search() {
 
     const handleSearch = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        // setSearch("");
+        setSearch("");
         router.push(`/search/${search}`);
     }
 

@@ -27,12 +27,11 @@ function CopyColors(props) {
 
     return <div>
         {/* // save colors */}
-        <button className="btn rounded-lg place-content-center  bg-slate-500/40 text-white font-bold py-2 mt-2 px-4 w-full flex content-center" onClick={() => copyColors()}>
+        <button data-popover id="popover-default" role="tooltip" className="btn rounded-lg place-content-center  text-white font-bold py-2  px-4 w-full flex content-center" onClick={() => copyColors()}>
             {hasCopied ?
                 <span className="flex text-md align-center"> <FiCheck className="self-center mr-2 text-green-500" /> Copied! </span>
                 :
                 <span className="flex text-md align-center"> <HiOutlineClipboardCopy className="self-center mr-2" /> Copy colors </span>}
-
         </button>
     </div>
 }
