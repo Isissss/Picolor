@@ -1,15 +1,10 @@
-import React, { Suspense, useState } from "react";
+import React from "react";
 import Vibrant from 'node-vibrant'
 import { createApi } from "unsplash-js";
 import Photo from "../../../components/Photo"
 import { Vec3 } from "@vibrant/color";
-import { Random } from "unsplash-js/dist/methods/photos/types";
-import { ApiResponse } from "unsplash-js/dist/helpers/response";
-import Link from "next/link";
-import ColorList from "../../../components/ColorList";
-import ImageContainer from "../../../components/ImageContainer";
 import Pagination from "../../../components/Pagination";
-import { cache } from "react";
+
 const env = process.env
 
 interface PageProps {
@@ -74,7 +69,7 @@ const search = async (searchTerm: string, page: number) => {
 
     }
 
-    const res = await api.search.getPhotos({ query: searchTerm, page: (page || 1), orientation: 'squarish', 'orderBy': 'latest', perPage: 10 }
+    const res = await api.search.getPhotos({ query: searchTerm, page: (page || 1), collectionIds: ['256524'], orientation: 'squarish', 'orderBy': 'latest', perPage: 10 }
         , { cache: 'force-cache' })
 
 
@@ -101,7 +96,7 @@ async function SearchResults({
     }
 
     return (<div className="flex justify-items-center flex-col">
-        <p className="text-gray-500 text-sm">You searched for {params.searchTerm}</p>
+        <p className="text-gray-500 text-sm">You searched for {params?.searchTerm}</p>
         <div className="grid xl:grid-cols-5 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
             {searchResults?.map((photo) => (
                 <Photo key={photo.id} photo={photo} />

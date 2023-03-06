@@ -1,7 +1,8 @@
 import React from "react";
+import Search from "./Search";
 
 function Home() {
-    return <div className="p-2 text-red-500 flex-grow">Homepageeee</div>;
+    return <Search />;
 }
 
 export default Home;

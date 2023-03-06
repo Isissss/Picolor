@@ -6,12 +6,16 @@
     "start": "next start"
   },
   "dependencies": {
+    "color-name-list": "^10.6.0",
+    "nearest-color": "^0.4.4",
     "next": "latest",
     "node-vibrant": "^3.1.6",
     "plaiceholder": "^2.5.0",
     "react": "18.2.0",
     "react-blurhash": "^0.3.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-icons": "^4.3.1",
+    "unsplash-js": "^7.0.15"
   },
   "devDependencies": {
     "@types/node": "18.11.3",
