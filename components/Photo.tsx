@@ -13,38 +13,11 @@ import ImageContainer from './ImageContainer';
 
 function Photo(props) {
     const photo = props.photo;
-    const [hasCopied, setHasCopied] = useState(false);
-    // const colors = photo.colors.map((color: any) => color.hex).join(', ');
-
-    useEffect(() => {
-        if (hasCopied) {
-            setTimeout(() => {
-                setHasCopied(false);
-            }, 1500);
-        }
-    }, [hasCopied]);
-
-
-
-    const copyColors = async () => {
-        try {
-            navigator.clipboard.writeText(colors);
-            setHasCopied(true);
-        } catch (err) {
-            console.error(err);
-            setHasCopied(false);
-        }
-    }
-
-
 
     return (
-
         <div className="hover:scale-105 group flex flex-col justify-items-center bg-slate-800 rounded-lg ring-2 ring-slate-900/5 shadow-md">
             <div className="relative">
-
                 <ImageContainer photo={photo} />
-
             </div>
             <div className="credit text-sky-400 text-center h-10 text-sm text-center place-items-center content-center flex" >
                 <p className="w-full py-2">
@@ -58,7 +31,6 @@ function Photo(props) {
                 <ColorList colors={photo.colors} />
             </div>
         </div >
-
     )
 }
 

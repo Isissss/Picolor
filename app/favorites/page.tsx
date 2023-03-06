@@ -1,6 +1,6 @@
 'use client'
 import { useState } from "react";
-import Photo from "../components/Photo";
+import Photo from "../../components/Photo";
 import { useEffect } from "react";
 
 function Favorites() {

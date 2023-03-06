@@ -6,12 +6,10 @@ import { BsBookmarkHeart, BsBookmarkHeartFill } from "react-icons/bs";
 
 
 function ImageContainer(props) {
-    let idsSaved: number[] = [];
 
     const [favorite, setFavorite] = useState(false);
 
     const getSaved = () => {
-        let initial
         let init = localStorage.getItem("saved");
         if (init && init !== "undefined") {
             return JSON.parse(init);
@@ -23,7 +21,7 @@ function ImageContainer(props) {
     useEffect(() => {
         const initial = getSaved();
 
-        idsSaved = initial.map((item: any) => item.id);
+        const idsSaved: any[] = initial.map((item: any) => item.id);
         setFavorite(idsSaved.includes(props.photo.id));
     }, [])
 
@@ -50,16 +48,15 @@ function ImageContainer(props) {
     };
     return (
 
-        <div className="rounded-t-lg" style={{ position: "relative", display: "block", overflow: "hidden" }}>
+        <div className="rounded-t-lg " style={{ position: "relative", display: "block", overflow: "hidden" }}>
 
             <Blurhash
                 hash={props.photo.blur_hash || 'L6PZfSi_.AyE_3t7t7R**0o#DgR4'}
-                width={400}
+                width={300}
                 height={300}
                 resolutionX={32}
                 resolutionY={32}
                 punch={1}
-
             />
 
             <Image

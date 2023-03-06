@@ -1,15 +1,15 @@
 import React, { Suspense, useState } from "react";
 import Vibrant from 'node-vibrant'
 import { createApi } from "unsplash-js";
-import Photo from "../../components/Photo"
+import Photo from "../../../components/Photo"
 import { Vec3 } from "@vibrant/color";
 import { Random } from "unsplash-js/dist/methods/photos/types";
 import { ApiResponse } from "unsplash-js/dist/helpers/response";
 import Link from "next/link";
-import ColorList from "../../components/ColorList";
-import ImageContainer from "../../components/ImageContainer";
-import Pagination from "../../components/Pagination";
-
+import ColorList from "../../../components/ColorList";
+import ImageContainer from "../../../components/ImageContainer";
+import Pagination from "../../../components/Pagination";
+import { cache } from "react";
 const env = process.env
 
 interface PageProps {
@@ -39,51 +39,48 @@ type SearchResults = {
     colors: any;
 }
 
-const getColors = async (url: string) => {
-    const colorTemp: (string | Vec3 | undefined)[] = []
-    await Vibrant.from(url).getPalette().then((palette) => {
-        for (const swatch in palette) {
-            if (palette[swatch]) {
+const getColors = async (photos) => {
 
-                const colors = {
-                    hex: palette[swatch]?.hex,
-                    hsl: palette[swatch]?.hsl,
+    for (const photo of photos) {
+        const colorTemp: (string | Vec3 | undefined)[] = []
+        await Vibrant.from(photo.urls.thumb).getPalette().then((palette) => {
+            for (const swatch in palette) {
+                if (palette[swatch]) {
+
+                    const colors = {
+                        hex: palette[swatch]?.hex,
+                        hsl: palette[swatch]?.hsl,
+                    }
+                    colorTemp.push(colors)
+
                 }
-                colorTemp.push(colors)
-
             }
         }
+        )
+        photo.colors = colorTemp
     }
-    )
-    return colorTemp
+    return photos
 }
 
 const search = async (searchTerm: string, page: number) => {
-    let res
 
     if (searchTerm.toLowerCase() == 'random') {
-        res = await api.photos.getRandom({ orientation: 'squarish', count: 10 }, { cache: 'force-cache' })
 
+        const res = await api.photos.getRandom({ orientation: 'squarish', count: 10 }, { cache: 'force-cache' })
 
-        for (const photo of res.response) {
-            photo.colors = await getColors(photo.urls.thumb)
-        }
-        return res.response
+        const newPhotos = await getColors(res.response)
+
+        return newPhotos
 
     }
-    else {
-        res = await api.search.getPhotos({ query: searchTerm, page: (page || 1), orientation: 'squarish', 'orderBy': 'latest', perPage: 10 }
-            , { cache: 'force-cache' })
+
+    const res = await api.search.getPhotos({ query: searchTerm, page: (page || 1), orientation: 'squarish', 'orderBy': 'latest', perPage: 10 }
+        , { cache: 'force-cache' })
 
 
-        for (const photo of res.response.results) {
-            photo.colors = await getColors(photo.urls.thumb)
-        }
-
-
-        return res.response
-    }
-
+    const newPhotos = await getColors(res.response?.results)
+    newPhotos.total_pages = res.response?.total_pages
+    return newPhotos
 }
 
 
@@ -99,7 +96,8 @@ async function SearchResults({
 
     if (params.searchTerm.toLowerCase() !== 'random') {
         totalPages = searchResults?.total_pages
-        searchResults = searchResults?.results
+        console.log(totalPages)
+
     }
 
     return (<div className="flex justify-items-center flex-col">
