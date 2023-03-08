@@ -1,29 +1,91 @@
 'use client'
-import Image from 'next/image'
-import nearestColor from 'nearest-color';
-import colorNameList from 'color-name-list';
-import React, { useState, useEffect, Suspense } from "react";
-import { HiOutlineClipboardCopy } from 'react-icons/Hi';
-import { FiCheck } from 'react-icons/fi';
-import { BsBookmarkHeart } from 'react-icons/bs';
 import ColorList from './ColorList';
-
-import ImageContainer from './ImageContainer';
-
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { Blurhash } from "react-blurhash";
+import { BsBookmarkHeart, BsBookmarkHeartFill } from "react-icons/bs";
+import { usePathname } from 'next/navigation';
 
 function Photo(props) {
+    const pathName = usePathname();
+    const [favorite, setFavorite] = useState(pathName?.includes("/favorites"));
+
+    const getSaved = () => {
+        let init = localStorage.getItem("saved");
+        if (init && init !== "undefined") {
+            return JSON.parse(init);
+        } else {
+            return [];
+        }
+    }
+
+    // useEffect(() => {
+    //     if (pathName?.includes("/favorites")) {
+    //         return;
+    //     }
+
+    //     const initial = getSaved();
+
+    //     const idsSaved: any[] = initial.map((item: any) => item.id);
+    //     setFavorite(idsSaved.includes(props.photo.id));
+    // }, [])
+
+
+
+
+
+    const save = () => {
+        const initial = getSaved();
+
+        if (favorite) {
+            const newSaved = initial.filter((item) => item.id !== photo.id);
+            localStorage.setItem("saved", JSON.stringify(newSaved));
+
+        } else {
+            localStorage.setItem("saved", JSON.stringify([...initial, photo]));
+        }
+
+        setFavorite(!favorite);
+
+    };
     const photo = props.photo;
 
     return (
         <div className="hover:scale-105 group flex flex-col justify-items-center bg-slate-800 rounded-lg ring-2 ring-slate-900/5 shadow-md">
-            <div className="relative">
-                <ImageContainer photo={photo} />
+
+            <div className="relative rounded-t-lg overflow-hidden">
+                <Blurhash
+                    hash={photo.blur_hash || 'L6PZfSi_.AyE_3t7t7R**0o#DgR4'}
+                    width={300}
+                    height={300}
+                    resolutionX={32}
+                    resolutionY={32}
+                    punch={1}
+                    className=" rounded-t-lg"
+                />
+                <img
+                    // unoptimized={true}
+                    // width={300}
+                    // height={300}
+                    // objectFit="cover"
+
+                    loading="lazy"
+                    src={props.photo.urls.raw + '&w=400&fm=webp'}
+                    alt={props.photo.alt_description || "Image"}
+                    className="object-cover object-middle w-full h-full absolute top-0 left-0 rounded-t-lg"
+                />
+                <div title={favorite ? 'Unsave' : 'Save'}>
+                    <button onClick={() => save()} className={`absolute ${favorite ? 'block' : 'hidden'} group-hover:block top-2 right-2 p-2 bg-gray-800/60 rounded-full hover:bg-gray-100/40`}>
+                        {favorite ? <BsBookmarkHeartFill /> : <BsBookmarkHeart />}
+                    </button>
+                </div>
+
             </div>
-            <div className="credit text-sky-400 text-center h-10 text-sm text-center place-items-center content-center flex" >
+            <div className="credit text-sky-400  h-10 text-sm text-center place-items-center content-center flex" >
                 <p className="w-full py-2">
-                    <a target="_blank" href={`https://unsplash.com/@${photo.user.username}?utm_source=picolor&utm_medium=referral`}
+                    <a target="_blank" href={`https://unsplash.com/@${photo.user}?utm_source=picolor&utm_medium=referral`}
                     >
-                        Author <span className="italic underline">{photo.user.name}</span> </a> via <a href={`https://unsplash.com?utm_source=picolor&utm_medium=referral`}><span className="italic underline">Unsplash</span>
+                        Author <span className="italic underline">{photo.user?.name || photo.user}</span> </a> via <a href={`https://unsplash.com?utm_source=picolor&utm_medium=referral`}><span className="italic underline">Unsplash</span>
                     </a>
                 </p>
             </div>
