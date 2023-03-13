@@ -4,7 +4,7 @@ import Photo from "../../components/Photo";
 import { useEffect } from "react";
 
 function Favorites() {
-    const [favorites, setFavorites] = useState(null);
+    const [favorites, setFavorites] = useState(null) as any;
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
 
@@ -13,6 +13,8 @@ function Favorites() {
 
         if (!favorites || favorites === 'undefined') {
             setFavorites([]);
+
+
         } else {
             const init = JSON.parse(favorites);
             const totalSaved = init.length;
@@ -47,14 +49,24 @@ function Favorites() {
         </div>
     </div>
 
+        <div style={{ position: "relative", display: "block", overflow: "hidden" }}>
+            <div className="flex justify-center items-center mt-4">
+                <button onClick={() => setPage(page - 1)} disabled={page == 1} className="disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center px-4 py-2 mx-1 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
 
-        <button disabled={page == 1} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-l" onClick={() => setPage(page - 1)}>
-            Previous
-        </button>
+                    <svg aria-hidden="true" className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M7.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l2.293 2.293a1 1 0 010 1.414z" clipRule="evenodd"></path></svg>
+                    Previous
 
-        <button disabled={page + 1 > totalPages} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-r" onClick={() => setPage(page + 1)}>
-            Next
-        </button>
+                </button>
+
+                <button onClick={() => setPage(page + 1)} disabled={page + 1 > totalPages} className="disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center px-4 py-2 mx-1 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+
+                    Next
+                    <svg aria-hidden="true" className="w-5 h-5 ml-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
+
+                </button>
+
+            </div>
+        </div >
 
     </>
 
