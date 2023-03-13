@@ -19,21 +19,6 @@ function Photo(props) {
         }
     }
 
-    // useEffect(() => {
-    //     if (pathName?.includes("/favorites")) {
-    //         return;
-    //     }
-
-    //     const initial = getSaved();
-
-    //     const idsSaved: any[] = initial.map((item: any) => item.id);
-    //     setFavorite(idsSaved.includes(props.photo.id));
-    // }, [])
-
-
-
-
-
     const save = () => {
         const initial = getSaved();
 
@@ -51,12 +36,12 @@ function Photo(props) {
     const photo = props.photo;
 
     return (
-        <div className="hover:scale-105 group flex flex-col justify-items-center bg-slate-800 rounded-lg ring-2 ring-slate-900/5 shadow-md">
+        <div className="group flex flex-col justify-items-center bg-slate-800 rounded-lg ring-2 ring-slate-900/5 shadow-md p-1">
 
             <div className="relative rounded-t-lg overflow-hidden">
                 <Blurhash
                     hash={photo.blur_hash || 'L6PZfSi_.AyE_3t7t7R**0o#DgR4'}
-                    width={300}
+                    width={267}
                     height={300}
                     resolutionX={32}
                     resolutionY={32}
@@ -64,18 +49,13 @@ function Photo(props) {
                     className=" rounded-t-lg"
                 />
                 <img
-                    // unoptimized={true}
-                    // width={300}
-                    // height={300}
-                    // objectFit="cover"
-
                     loading="lazy"
                     src={props.photo.urls.raw + '&w=400&fm=webp'}
                     alt={props.photo.alt_description || "Image"}
                     className="object-cover object-middle w-full h-full absolute top-0 left-0 rounded-t-lg"
                 />
                 <div title={favorite ? 'Unsave' : 'Save'}>
-                    <button onClick={() => save()} className={`absolute ${favorite ? 'block' : 'hidden'} group-hover:block top-2 right-2 p-2 bg-gray-800/60 rounded-full hover:bg-gray-100/40`}>
+                    <button onClick={() => save()} className={`absolute ${favorite ? 'block' : 'hidden'} group-hover:block top-2 right-2 p-2 bg-gray-800/60 rounded-full hover:bg-gray-100/90`}>
                         {favorite ? <BsBookmarkHeartFill /> : <BsBookmarkHeart />}
                     </button>
                 </div>

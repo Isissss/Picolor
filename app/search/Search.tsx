@@ -2,6 +2,7 @@
 import React, { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { BsDice5 } from "react-icons/bs";
+import Link from "next/link";
 
 function Search() {
     const [search, setSearch] = useState("");

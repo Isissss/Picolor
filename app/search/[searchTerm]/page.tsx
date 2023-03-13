@@ -6,7 +6,8 @@ import { Vec3 } from "@vibrant/color";
 import Pagination from "../../../components/Pagination";
 import nearestColor from 'nearest-color';
 import colorNameList from 'color-name-list';
-const env = process.env
+import { ApiResponse } from "unsplash-js/dist/helpers/response";
+
 
 interface PageProps {
     params: {
@@ -19,30 +20,38 @@ interface PageProps {
 }
 
 const api = createApi({
-    accessKey: env.APP_KEY || '',
+    accessKey: process.env.APP_KEY || '',
 });
+
 const colorList = colorNameList.reduce((o, { name, hex }) => Object.assign(o, { [name]: hex }), {});
 const nearest = nearestColor.from(colorList);
 
 
-type SearchResults = {
+type Photos = {
     id: number;
     width: number;
     height: number;
     urls: { large: string; regular: string; raw: string; small: string };
-    color: string | null;
     user: {
         username: string;
         name: string;
     };
-    colors: any;
+    blur_hash: string | null;
+    colors: { hex: string; hsl: Vec3; name: string | undefined }[];
+
 }
 
-const getPhotosAndColors = async (photos) => {
-    const photosWithPalette: any[] = []
+type PhotosResponse = {
+    results: Photos[];
+    total_pages: number | undefined;
+}
+
+
+const getPhotosAndColors = async (photos: any[]) => {
+    const photosWithPalette: Photos[] = []
     for (const photo of photos) {
 
-        const colorTemp: (string | Vec3 | undefined)[] = []
+        const colorTemp: { hex: string; hsl: Vec3; name: string | undefined }[] = [];
         const swatches = await Vibrant.from(photo.urls.thumb).getPalette()
         Object.entries(swatches).forEach(([key, palette]) => {
             if (palette) {
@@ -65,59 +74,51 @@ const getPhotosAndColors = async (photos) => {
             urls: photo.urls,
             user: photo.user.name,
             colors: colorTemp,
-            blur_hash: photo.blur_hash,
+            blur_hash: photo.blur_hash
         })
     }
 
     return photosWithPalette
 }
 
+
 const search = async (searchTerm: string, page: number) => {
+    let newResult: PhotosResponse = {
+        results: [],
+        total_pages: undefined
+    }
+
 
     if (searchTerm.toLowerCase() == 'random') {
-
         const res = await api.photos.getRandom({ count: 10, orientation: 'portrait' }, { cache: 'force-cache' })
-
-        const newPhotos = await getPhotosAndColors(res.response)
-
-        return newPhotos
-
+        newResult.results = await getPhotosAndColors(res.response)
+        return newResult
     }
 
     const res = await api.search.getPhotos({ query: searchTerm, page: (page || 1), orientation: 'squarish', orderBy: 'relevant', perPage: 10 }
         , { cache: 'force-cache' })
 
+    newResult.results = await getPhotosAndColors(res.response.results)
+    newResult.total_pages = res.response?.total_pages
 
-    const newPhotos = await getPhotosAndColors(res.response?.results)
-    newPhotos.total_pages = res.response?.total_pages
-
-    return newPhotos
+    return newResult
 }
 
 
-async function SearchResults({
-    params,
-    searchParams,
-}: {
-    params: { searchTerm: string };
-    searchParams?: { [key: string | number]: string | number | string[] | number[] | undefined };
-}) {
-    let searchResults = await search(params?.searchTerm, searchParams?.page || 1)
-    let totalPages
+async function SearchResults({ params, searchParams }: PageProps) {
 
-    if (params.searchTerm.toLowerCase() !== 'random') {
-        totalPages = searchResults?.total_pages
-    }
+    let searchResults = await search(params?.searchTerm, searchParams?.page || 1)
+
 
     return (<div className="flex justify-items-center flex-col">
         <p className="text-gray-500 text-sm">You searched for {params?.searchTerm}</p>
         {/* <ImageGrid photos={searchResults} /> */}
         <div className="grid xl:grid-cols-5 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-            {searchResults?.map((photo) => (
+            {searchResults?.results?.map((photo) => (
                 <Photo key={photo.id} photo={photo} />
             ))}
         </div>
-        <Pagination totalPages={totalPages} page={parseInt(searchParams?.page) || 1} searchTerm={params.searchTerm} />
+        <Pagination totalPages={searchResults.total_pages} page={parseInt(searchParams?.page) || 1} searchTerm={params.searchTerm} />
 
     </div >
     );
