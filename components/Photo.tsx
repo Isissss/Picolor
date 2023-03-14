@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Blurhash } from "react-blurhash";
 import { BsBookmarkHeart, BsBookmarkHeartFill } from "react-icons/bs";
 import { usePathname } from 'next/navigation';
-
+import { Tooltip } from 'react-tooltip'
 function Photo(props) {
     const pathName = usePathname();
     const [favorite, setFavorite] = useState(pathName?.includes("/favorites"));
@@ -41,23 +41,26 @@ function Photo(props) {
             <div className="relative rounded-t-lg overflow-hidden">
                 <Blurhash
                     hash={photo.blur_hash || 'L6PZfSi_.AyE_3t7t7R**0o#DgR4'}
-                    width={267}
+                    width={300}
                     height={300}
                     resolutionX={32}
                     resolutionY={32}
                     punch={1}
                     className=" rounded-t-lg"
                 />
-                <img
+                <Image
                     loading="lazy"
-                    src={props.photo.urls.raw + '&w=400&fm=webp'}
+                    fill
+                    src={props.photo.urls.regular}
                     alt={props.photo.alt_description || "Image"}
-                    className="object-cover absolute top-0 left-0 rounded-t-lg"
+                    className="object-cover object-middle h-full w-full absolute top-0 left-0 rounded-t-lg"
                 />
-                <div title={favorite ? 'Unsave' : 'Save'}>
-                    <button onClick={() => save()} className={`absolute ${favorite ? 'block' : 'hidden'} group-hover:block top-2 right-2 p-2 bg-gray-800/60 rounded-full hover:bg-gray-800/90`}>
+
+                <div>
+                    <button data-tooltip-id={`save${photo.id}`} data-tooltip-content={favorite ? "Remove from favorites" : "Save for later"} onClick={() => save()} className={`absolute ${favorite ? 'block' : 'hidden'} group-hover:block top-2 right-2 p-2 bg-gray-800/60 rounded-full hover:bg-gray-800/90`}>
                         {favorite ? <BsBookmarkHeartFill /> : <BsBookmarkHeart />}
                     </button>
+                    <Tooltip id={`save${photo.id}`} style={{ background: '#222' }} />
                 </div>
 
             </div>

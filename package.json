@@ -6,6 +6,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@tippyjs/react": "^4.2.6",
     "color-name-list": "^10.6.0",
     "nearest-color": "^0.4.4",
     "next": "latest",
@@ -16,6 +17,7 @@
     "react-blurhash": "^0.3.0",
     "react-dom": "18.2.0",
     "react-icons": "^4.3.1",
+    "react-tooltip": "5.10.1-beta-9",
     "unsplash-js": "^7.0.15"
   },
   "devDependencies": {

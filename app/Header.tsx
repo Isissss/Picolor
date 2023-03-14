@@ -7,19 +7,19 @@ function Header() {
     const currentRoute = usePathname();
     const [mounted, setMounted] = useState(false)
     const { theme, setTheme } = useTheme();
-   
+
     useEffect(() => {
         setMounted(true)
-      
-      }, [])
- 
+
+    }, [])
+
     const toggleTheme = () => {
         if (theme === 'dark') {
             setTheme('light');
         } else {
             setTheme('dark');
         }
- 
+
     }
 
     return (
@@ -29,7 +29,7 @@ function Header() {
                 <Link href="/" className={`text-lg leading-6 ${currentRoute == "/" || currentRoute?.includes("/search") ? 'font-bold' : ''}`}> Search</Link>
                 <Link href="/favorites" prefetch={false} className={`text-lg leading-6 ${currentRoute == "/favorites" ? 'font-bold' : ''}`}> Saved</Link>
             </div>
-            <button className="ml-auto" onClick={() => toggleTheme()}> { !mounted ? null : (theme === 'dark' ? '🌙' : '☀️')} </button>
+            <button className="ml-auto" onClick={() => toggleTheme()}> {!mounted ? null : (theme === 'dark' ? '🌙' : '☀️')} </button>
         </header >
     )
 }

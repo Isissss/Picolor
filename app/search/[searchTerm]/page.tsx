@@ -6,16 +6,15 @@ import { Vec3 } from "@vibrant/color";
 import Pagination from "../../../components/Pagination";
 import nearestColor from 'nearest-color';
 import colorNameList from 'color-name-list';
-import { ApiResponse } from "unsplash-js/dist/helpers/response";
+
 
 
 interface PageProps {
     params: {
         searchTerm: string;
-
     },
-    seachParams: {
-        page: number;
+    searchParams: {
+        page: string | number;
     }
 }
 

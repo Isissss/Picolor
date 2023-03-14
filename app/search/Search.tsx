@@ -2,6 +2,7 @@
 import React, { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { BsDice5 } from "react-icons/bs";
+import { Tooltip } from 'react-tooltip'
 
 function Search() {
     const [search, setSearch] = useState("");
@@ -27,7 +28,9 @@ function Search() {
             </div>
         </form>
         <div className="flex justify-self-center">
-            <button className="rounded-lg bg-blue-600 hover:bg-blue-700 p-4 mx-1 text-lg" title="Random search" onClick={() => router.push("/search/random")}> <BsDice5 /></button>
+            <button data-tooltip-id="random-search" data-tooltip-content="Random Search" className="rounded-lg bg-blue-600 hover:bg-blue-700 p-4 mx-1 text-lg" onClick={() => router.push("/search/random")}> <BsDice5 />
+            </button>
+            <Tooltip id="random-search" style={{ background: '#222' }} />
         </div>
 
     </div>)
