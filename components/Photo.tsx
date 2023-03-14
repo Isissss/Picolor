@@ -52,16 +52,16 @@ function Photo(props) {
                     loading="lazy"
                     src={props.photo.urls.raw + '&w=400&fm=webp'}
                     alt={props.photo.alt_description || "Image"}
-                    className="object-cover object-middle w-full h-full absolute top-0 left-0 rounded-t-lg"
+                    className="object-cover absolute top-0 left-0 rounded-t-lg"
                 />
                 <div title={favorite ? 'Unsave' : 'Save'}>
-                    <button onClick={() => save()} className={`absolute ${favorite ? 'block' : 'hidden'} group-hover:block top-2 right-2 p-2 bg-gray-800/60 rounded-full hover:bg-gray-100/90`}>
+                    <button onClick={() => save()} className={`absolute ${favorite ? 'block' : 'hidden'} group-hover:block top-2 right-2 p-2 bg-gray-800/60 rounded-full hover:bg-gray-800/90`}>
                         {favorite ? <BsBookmarkHeartFill /> : <BsBookmarkHeart />}
                     </button>
                 </div>
 
             </div>
-            <div className="credit text-sky-400  h-10 text-sm text-center place-items-center content-center flex" >
+            <div className="credit text-sky-400  h-10 text-xs text-center place-items-center content-center flex" >
                 <p className="w-full py-2">
                     <a target="_blank" href={`https://unsplash.com/@${photo.user}?utm_source=picolor&utm_medium=referral`}
                     >

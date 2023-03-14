@@ -41,7 +41,7 @@ function Favorites() {
     }
 
     return <><div className="flex justify-items-center flex-col">
-        <div className="grid xl:grid-cols-5 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+        <div className="grid xl:grid-cols-5 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
             {favorites && favorites.map((item: any) => {
                 return <Photo key={item.id} photo={item} />
             })

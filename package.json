@@ -9,6 +9,8 @@
     "color-name-list": "^10.6.0",
     "nearest-color": "^0.4.4",
     "next": "latest",
+    "next-themes": "^0.2.1",
+    "nextjs": "^0.0.3",
     "node-vibrant": "^3.1.6",
     "react": "18.2.0",
     "react-blurhash": "^0.3.0",

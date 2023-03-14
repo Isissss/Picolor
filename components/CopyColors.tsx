@@ -29,9 +29,9 @@ function CopyColors(props) {
         {/* // save colors */}
         <button className="btn rounded-lg place-content-center text-white py-2 px-4 w-full flex content-center" onClick={() => copyColors()}>
             {hasCopied ?
-                <span className="flex text-md align-center"> <FiCheck className="self-center mr-2 text-green-500" />  Copied! </span>
+                <span className="flex text-md align-center"> <FiCheck className="self-center mr-2 text-green-500" /> <span className="font-bold"> Copied! </span> </span>
                 :
-                <span className="flex text-md align-center"> <HiOutlineClipboardCopy className="self-center mr-2" /> Copy colors </span>}
+                <span className="flex text-md align-center"> <HiOutlineClipboardCopy className="self-center mr-2" />  <span className="font-bold ">  Copy colors  </span> </span>}
         </button>
     </div>
 }
