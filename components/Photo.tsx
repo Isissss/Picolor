@@ -1,12 +1,25 @@
 'use client'
 import ColorList from './ColorList';
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Blurhash } from "react-blurhash";
 import { BsBookmarkHeart, BsBookmarkHeartFill } from "react-icons/bs";
 import { usePathname } from 'next/navigation';
 import { Tooltip } from 'react-tooltip'
-function Photo(props) {
+function Photo(props: {
+    photo: {
+        user: string;
+        blur_hash: string;
+        alt_description: string;
+        height: number;
+        width: number;
+        urls: {
+            regular: string;
+        };
+        colors: { hex: string; }[];
+        id: number;
+    }
+}) {
     const pathName = usePathname();
     const [favorite, setFavorite] = useState(pathName?.includes("/favorites"));
 
@@ -23,7 +36,7 @@ function Photo(props) {
         const initial = getSaved();
 
         if (favorite) {
-            const newSaved = initial.filter((item) => item.id !== photo.id);
+            const newSaved = initial.filter((item: any) => item.id !== photo.id);
             localStorage.setItem("saved", JSON.stringify(newSaved));
 
         } else {
@@ -36,7 +49,7 @@ function Photo(props) {
     const photo = props.photo;
 
     return (
-        <div className="group flex flex-col justify-items-center bg-slate-800 rounded-lg ring-2 ring-slate-900/5 shadow-md p-1">
+        <div className="group flex flex-col justify-items-center bg-gray-200 dark:bg-slate-800 rounded-lg ring-2 ring-slate-400/5 dark:ring-slate-900/5 shadow-md p-1">
 
             <div className="relative rounded-t-lg overflow-hidden">
                 <Blurhash
@@ -51,8 +64,8 @@ function Photo(props) {
                 <Image
                     loading="lazy"
                     fill
-                    src={props.photo.urls.regular}
-                    alt={props.photo.alt_description || "Image"}
+                    src={photo.urls.regular}
+                    alt={photo.alt_description || "Image"}
                     className="object-cover object-middle h-full w-full absolute top-0 left-0 rounded-t-lg"
                 />
 
@@ -64,11 +77,13 @@ function Photo(props) {
                 </div>
 
             </div>
-            <div className="credit text-sky-400  h-10 text-xs text-center place-items-center content-center flex" >
+            <div className="credit text-sky-600 dark:text-sky-400 h-10 text-xs text-center place-items-center content-center flex" >
                 <p className="w-full py-2">
                     <a target="_blank" href={`https://unsplash.com/@${photo.user}?utm_source=picolor&utm_medium=referral`}
-                    >
-                        Author <span className="italic underline">{photo.user?.name || photo.user}</span> </a> via <a href={`https://unsplash.com?utm_source=picolor&utm_medium=referral`}><span className="italic underline">Unsplash</span>
+                    >Author {" "}
+                        <span className="italic underline">{photo.user}</span> </a>
+                    via <a href={`https://unsplash.com?utm_source=picolor&utm_medium=referral`}>
+                        <span className="italic underline">Unsplash</span>
                     </a>
                 </p>
             </div>
