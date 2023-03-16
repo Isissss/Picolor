@@ -6,20 +6,10 @@ import { Blurhash } from "react-blurhash";
 import { BsBookmarkHeart, BsBookmarkHeartFill } from "react-icons/bs";
 import { usePathname } from 'next/navigation';
 import { Tooltip } from 'react-tooltip'
-function Photo(props: {
-    photo: {
-        user: string;
-        blur_hash: string;
-        alt_description: string;
-        height: number;
-        width: number;
-        urls: {
-            regular: string;
-        };
-        colors: { hex: string; }[];
-        id: number;
-    }
-}) {
+import { PhotoTest } from "../types/types";
+
+function Photo(props: { photo: PhotoTest }) {
+    if (!props) return null;
     const pathName = usePathname();
     const [favorite, setFavorite] = useState(pathName?.includes("/favorites"));
 
@@ -49,11 +39,11 @@ function Photo(props: {
     const photo = props.photo;
 
     return (
-        <div className="group flex flex-col justify-items-center bg-gray-200 dark:bg-slate-800 rounded-lg ring-2 ring-slate-400/5 dark:ring-slate-900/5 shadow-md p-1">
+        <div className="group flex flex-col justify-items-center bg-slate-100 dark:bg-slate-800 rounded-lg ring-2 ring-slate-400/5 dark:ring-slate-900/5 shadow-md p-1">
 
             <div className="relative rounded-t-lg overflow-hidden">
                 <Blurhash
-                    hash={photo.blur_hash || 'L6PZfSi_.AyE_3t7t7R**0o#DgR4'}
+                    hash={photo.blur_hash}
                     width={300}
                     height={300}
                     resolutionX={32}

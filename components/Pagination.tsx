@@ -2,7 +2,7 @@
 'use client'
 import { useRouter } from "next/navigation";
 
-function Pagination(props: { page: number, changePage?: any, searchTerm?: string, favorites: boolean, nextPage: boolean, prevPage: boolean }) {
+function Pagination(props: { page: number, changePage?: any, searchTerm?: string, favorites?: boolean, nextPage: boolean, prevPage: boolean }) {
     const router = useRouter();
 
     const switchPage = (page: number) => {

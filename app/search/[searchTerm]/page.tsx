@@ -6,7 +6,8 @@ import { Vec3 } from "@vibrant/color";
 import Pagination from "../../../components/Pagination";
 import nearestColor from 'nearest-color';
 import colorNameList from 'color-name-list';
-
+import { PhotoTest } from "../../../types/types";
+import { Random, Basic } from "unsplash-js/dist/methods/photos/types";
 
 
 interface PageProps {
@@ -14,7 +15,7 @@ interface PageProps {
         searchTerm: string;
     },
     searchParams: {
-        page: any;
+        page: string
     }
 }
 
@@ -26,42 +27,14 @@ const colorList = colorNameList.reduce((o, { name, hex }) => Object.assign(o, { 
 const nearest = nearestColor.from(colorList);
 
 
-type Photos = {
-    id: number;
-    width: number;
-    height: number;
-    alt_description: string | null;
-    urls: { large: string; regular: string; raw: string; small: string };
-    user: {
-        username: string;
-        name: string;
-    };
-    blur_hash: string | null;
-    colors: { hex: string; hsl: Vec3; name: string | undefined }[];
-
-}
-
-type Photo = {
-    id: number;
-    user: string;
-    blur_hash: string;
-    alt_description: string;
-    width: number;
-    height: number;
-    urls: {
-        regular: string;
-    };
-    colors: { hex: string; }[];
-}
-
 type PhotosResponse = {
-    results: Photos[];
+    results: PhotoTest[] | [];
     total_pages: number;
 }
 
 
-const getPhotosAndColors = async (photos: any[]) => {
-    const photosWithPalette: Photos[] = []
+const getPhotosAndColors = async (photos: Random[] | Basic[]) => {
+    const photosWithPalette: PhotoTest[] = []
     for (const photo of photos) {
         const colorTemp: { hex: string; hsl: Vec3; name: string | undefined }[] = [];
         const swatches = await Vibrant.from(photo.urls.thumb).getPalette()
@@ -86,7 +59,7 @@ const getPhotosAndColors = async (photos: any[]) => {
             alt_description: photo.alt_description || 'Picture',
             user: photo.user.name,
             colors: colorTemp,
-            blur_hash: photo.blur_hash
+            blur_hash: photo.blur_hash || 'L6PZfSi_.AyE_3t7t7R**0o#DgR4'
         })
     }
 
@@ -94,54 +67,60 @@ const getPhotosAndColors = async (photos: any[]) => {
 }
 
 
+
 const search = async (searchTerm: string, page: number) => {
-    let newResult: PhotosResponse = {
-        results: [],
-        total_pages: 1
-    }
+    let newResult: PhotosResponse = { results: [], total_pages: 0 }
 
 
     if (searchTerm.toLowerCase() == 'random') {
         const res = await api.photos.getRandom({ count: 10, orientation: 'portrait' }, { cache: 'force-cache' })
-        // @ts-ignore
 
-        if (!res.response) {
-            return (<div> No results </div>)
+        if (!res || !res.response) return { results: [], total_pages: 0 }
+
+        if (Array.isArray(res.response)) {
+            newResult.results = await getPhotosAndColors(res.response)
+        } else {
+            newResult.results = await getPhotosAndColors([res.response])
         }
 
-        // @ts-ignore
-        newResult.results = await getPhotosAndColors(res.response)
         return newResult
     }
 
     const res = await api.search.getPhotos({ query: searchTerm, page: (page || 1), orientation: 'squarish', orderBy: 'relevant', perPage: 10 }
         , { cache: 'force-cache' })
 
-    if (!res?.response?.results) {
-        return (<div> No results </div>)
-    }
+    if (!res || !res.response || res.response.results.length === 0) return { results: [], total_pages: 0 }
 
-    // @ts-ignore
-    newResult.results = await getPhotosAndColors(res?.response?.results)
-    newResult.total_pages = res.response.total_pages
+    newResult.results = await getPhotosAndColors(res.response.results)
+    newResult.total_pages = res?.response?.total_pages
 
     return newResult
 }
 
 
 async function SearchResults({ params, searchParams }: PageProps) {
+    const pageNum = parseInt(searchParams?.page) || 1
 
-    let searchResults = await search(params?.searchTerm, searchParams?.page || 1)
+    let searchResults = await search(params?.searchTerm, pageNum)
 
-    return (<div className="flex justify-items-center flex-col">
+    if (!searchResults.results) {
+        return (
+            <div className="flex justify-items-center flex-col">
+                <p className="text-gray-500 text-sm">No results found for {params?.searchTerm}</p>
+            </div>
+        )
+    }
+
+    return (<div className="flex justify-items-center flex-col" >
         <p className="text-gray-500 text-sm">You searched for {params?.searchTerm}</p>
         <div className="grid xl:grid-cols-5 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-            {searchResults?.results?.map((photo: Photo) => (
+            {searchResults.results.map((photo: PhotoTest) => (
                 <Photo key={photo.id} photo={photo} />
             ))}
         </div>
-        {params.searchTerm.toLowerCase() !== 'random' && <Pagination nextPage={searchParams?.page >= (searchResults.total_pages - 1)} favorites={false} prevPage={!searchParams?.page || searchParams?.page <= 1} page={parseInt(searchParams.page) || 1} searchTerm={params.searchTerm} />}
-    </div>
+        {params.searchTerm.toLowerCase() !== 'random' && <Pagination nextPage={pageNum >= (searchResults.total_pages - 1)} prevPage={pageNum <= 1} page={pageNum} searchTerm={params.searchTerm} />
+        }
+    </div >
     );
 }
 

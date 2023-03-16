@@ -15,7 +15,7 @@ export default function RootLayout({ children, }
                 <meta name="language" content="en" />
             </head>
 
-            <body className="bg-gray-300 dark:bg-slate-900 text-white flex flex-col  min-h-screen "  >
+            <body className="bg-slate-200 dark:bg-slate-900 text-white flex flex-col  min-h-screen "  >
                 <ThemeProvider attribute="class">
                     <Header />
                     <main className='flex flex-col flex-grow p-4' >
