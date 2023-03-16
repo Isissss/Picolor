@@ -24,7 +24,7 @@ export default function RootLayout({ children, }
                             <p className='text-sm text-slate-600 dark:text-slate-400 text-center'> Request a subject to receive images and it's most prominent color which you can use as a color pallete for anything! </p>
                             <p className='text-lg aria-hidden text-center'> 📷🎨🖼️✨ </p>
                         </div>
-                        <div className="flex-1 p-4  sm:mx-18 min-[1650px]:mx-36">
+                        <div className="flex-1 p-4 w-full max-w-[1600px] min-[1600px]:self-center sm:mx-18 min-[1650px]:mx-36">
                             {children}
                         </div>
                     </main>

@@ -4,9 +4,7 @@ import { FiCheck } from "react-icons/fi";
 import { HiOutlineClipboardCopy } from "react-icons/hi";
 
 function CopyColors(props: {
-    colors: {
-        hex: string;
-    }[]
+    colors: any;
 }) {
     const [hasCopied, setHasCopied] = useState(false)
     const colors = props.colors.map((color: any) => color.hex).join(', ');

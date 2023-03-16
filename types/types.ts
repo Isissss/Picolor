@@ -1,3 +1,4 @@
+import { Vec3 } from "node-vibrant/lib/color";
 
 export type PhotoTest = {
     id: string;
@@ -9,5 +10,12 @@ export type PhotoTest = {
     urls: {
         regular: string;
     };
-    colors: { hex: string; }[];
+    colors: ColorList[];
+}
+
+
+export type ColorList = {
+    hex: string,
+    hsl: Vec3,
+    name: string
 }

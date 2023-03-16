@@ -67,7 +67,7 @@ function Photo(props: { photo: PhotoTest }) {
                 </div>
 
             </div>
-            <div className="credit text-sky-600 dark:text-sky-400 h-10 text-xs text-center place-items-center content-center flex" >
+            <div className="credit text-sky-700 dark:text-sky-400 h-10 text-xs text-center place-items-center content-center flex" >
                 <p className="w-full py-2">
                     <a target="_blank" href={`https://unsplash.com/@${photo.user}?utm_source=picolor&utm_medium=referral`}
                     >Author {" "}
