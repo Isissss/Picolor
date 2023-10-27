@@ -5,8 +5,7 @@ import Photo from "../../../components/Photo"
 import Pagination from "../../../components/Pagination";
 import nearestColor from 'nearest-color';
 import colorNameList from 'color-name-list';
-import { ColorList, PhotoTest } from "../../../types/types";
-import { Random, Basic } from "unsplash-js/dist/methods/photos/types";
+import { PhotoType } from "../../../types/types";
 
 interface PageProps {
     params: {
@@ -18,7 +17,7 @@ interface PageProps {
 }
 
 type PhotosResponse = {
-    results: PhotoTest[] | [];
+    results: PhotoType[] | [];
     total_pages: number;
 }
 
@@ -30,25 +29,21 @@ const api = createApi({
 const colorList = colorNameList.reduce((o, { name, hex }) => Object.assign(o, { [name]: hex }), {});
 const nearest = nearestColor.from(colorList);
 
-const getPhotosAndColors = async (photos: Random[] | Basic[]) => {
-    const photosWithPalette: PhotoTest[] = []
-    for (const photo of photos) {
-        const colorTemp: ColorList[] = []
-        const swatches = await Vibrant.from(photo.urls.thumb).getPalette()
-        Object.entries(swatches).forEach(([key, palette]) => {
-            if (palette) {
-                if (palette?.hex) {
-                    const colors: ColorList = {
-                        hex: palette?.hex,
-                        hsl: palette?.hsl,
-                        name: nearest(palette?.hex)?.name
-                    }
-                    colorTemp.push(colors)
-                }
-            }
-        })
+const getPhotosAndColors = async (photos: any) => {
+    const fetchPalettes = photos.map(async (photo: any) => {
+        const swatches = await Vibrant.from(photo.urls.thumb).getPalette();
 
-        photosWithPalette.push({
+
+        const colorTemp = Object.entries(swatches)
+            .filter(([palette]) => palette && palette.hex)
+            .map(([palette]) => {
+                // @ts-ignore
+                const { hex, hsl } = palette;
+                const name = nearest(hex)?.name;
+                return { hex, hsl, name };
+            });
+
+        return {
             id: photo.id,
             width: photo.width,
             height: photo.height,
@@ -56,13 +51,14 @@ const getPhotosAndColors = async (photos: Random[] | Basic[]) => {
             alt_description: photo.alt_description || 'Picture',
             user: photo.user.name,
             colors: colorTemp,
-            blur_hash: photo.blur_hash || 'L6PZfSi_.AyE_3t7t7R**0o#DgR4'
-        })
-    }
+            blur_hash: photo.blur_hash || 'L6PZfSi_.AyE_3t7t7R**0o#DgR4',
+        };
+    });
 
-    return photosWithPalette
-}
+    const photosWithPalette = await Promise.all(fetchPalettes);
 
+    return photosWithPalette;
+};
 
 
 const search = async (searchTerm: string, page: number) => {
@@ -91,14 +87,14 @@ const search = async (searchTerm: string, page: number) => {
     newResult.results = await getPhotosAndColors(res.response.results)
     newResult.total_pages = res?.response?.total_pages
 
-    return newResult
+    return new
 }
 
 
 async function SearchResults({ params, searchParams }: PageProps) {
     const pageNum = parseInt(searchParams.page) || 1
 
-    let searchResults = await search(params.searchTerm, pageNum)
+    const searchResults = await search(params.searchTerm, pageNum)
 
     if (!searchResults.results || searchResults.results.length === 0) {
         return (
@@ -111,7 +107,7 @@ async function SearchResults({ params, searchParams }: PageProps) {
     return (<div className="flex justify-items-center flex-col" >
         <p className="text-gray-500 text-sm"> {params.searchTerm.toLowerCase() == 'random' ? `Results for random images` : `You searched for: ${params.searchTerm} `}</p>
         <div className="grid xl:grid-cols-5 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-            {searchResults.results.map((photo: PhotoTest) => (
+            {searchResults.results.map((photo: PhotoType) => (
                 <Photo key={photo.id} photo={photo} />
             ))}
         </div>
