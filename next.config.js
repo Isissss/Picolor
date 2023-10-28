@@ -1,9 +1,6 @@
 /** @type {import('next').NextConfig} */
 module.exports = {
-  reactStrictMode: true,
-  experimental: {
-    appDir: true
-  },
+  reactStrictMode: true, 
   images: {
     unoptimized: true,
     domains: ['images.unsplash.com', 'plus.unsplash.com'],

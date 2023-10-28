@@ -7,6 +7,9 @@ import nearestColor from 'nearest-color';
 import colorNameList from 'color-name-list';
 import { PhotoType } from "../../../types/types";
 
+export const revalidate = 0;
+
+
 interface PageProps {
     params: {
         searchTerm: string;
@@ -21,7 +24,6 @@ type PhotosResponse = {
     total_pages: number;
 }
 
-
 const api = createApi({
     accessKey: process.env.APP_KEY || '',
 });
@@ -35,8 +37,8 @@ const getPhotosAndColors = async (photos: any) => {
 
 
         const colorTemp = Object.entries(swatches)
-            .filter(([palette]) => palette && palette.hex)
-            .map(([palette]) => {
+            .filter(([_, palette]) => palette && palette.hex)
+            .map(([_, palette]) => {
                 // @ts-ignore
                 const { hex, hsl } = palette;
                 const name = nearest(hex)?.name;
@@ -66,7 +68,7 @@ const search = async (searchTerm: string, page: number) => {
 
 
     if (searchTerm.toLowerCase() == 'random') {
-        const res = await api.photos.getRandom({ count: 10, orientation: 'portrait' }, { cache: 'force-cache' })
+        const res = await api.photos.getRandom({ count: 10, orientation: 'portrait' }, { cache: 'no-cache' })
 
         if (!res || !res.response) return { results: [], total_pages: 0 }
 
@@ -87,7 +89,7 @@ const search = async (searchTerm: string, page: number) => {
     newResult.results = await getPhotosAndColors(res.response.results)
     newResult.total_pages = res?.response?.total_pages
 
-    return new
+    return newResult
 }
 
 
@@ -105,6 +107,7 @@ async function SearchResults({ params, searchParams }: PageProps) {
     }
 
     return (<div className="flex justify-items-center flex-col" >
+
         <p className="text-gray-500 text-sm"> {params.searchTerm.toLowerCase() == 'random' ? `Results for random images` : `You searched for: ${params.searchTerm} `}</p>
         <div className="grid xl:grid-cols-5 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
             {searchResults.results.map((photo: PhotoType) => (

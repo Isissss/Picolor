@@ -11,7 +11,7 @@ function Search() {
     const handleSearch = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setSearch("");
-        router.push(`/search/${search}`);
+        router.push(`/search/${search}`)
     }
 
     return (<div className="flex flex-row">
@@ -23,16 +23,15 @@ function Search() {
                 </div>
                 <input type="search" id="default-search" className="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    placeholder="Search for a subject   " required />
+                    placeholder="Search for a subject" required />
                 <button type="submit" className="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button>
             </div>
         </form>
         <div className="flex justify-self-center">
-            <button data-tooltip-id="random-search" data-tooltip-content="Random Search" className="rounded-lg bg-blue-600 hover:bg-blue-700 p-4 mx-1 text-lg" onClick={() => router.push("/search/random")}> <BsDice5 />
+            <button data-tooltip-id="random-search" data-tooltip-content="Random Search" className="rounded-lg bg-blue-600 hover:bg-blue-700 p-4 mx-1 text-lg" onClick={() => { router.push("/search/random"); router.refresh() }}> <BsDice5 />
             </button>
             <Tooltip id="random-search" style={{ background: '#222' }} />
         </div>
-
     </div>)
 }
 

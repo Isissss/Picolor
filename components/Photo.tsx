@@ -1,17 +1,23 @@
 'use client'
 import ColorList from './ColorList';
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Blurhash } from "react-blurhash";
 import { BsBookmarkHeart, BsBookmarkHeartFill } from "react-icons/bs";
-import { usePathname } from 'next/navigation';
 import { Tooltip } from 'react-tooltip'
-import { PhotoTest } from "../types/types";
+import { PhotoType } from "../types/types";
 
-function Photo(props: { photo: PhotoTest }) {
+function Photo(props: { photo: PhotoType }) {
     if (!props) return null;
-    const pathName = usePathname();
-    const [favorite, setFavorite] = useState(pathName?.includes("/favorites"));
+    const [favorite, setFavorite] = useState(false);
+
+    useEffect(() => {
+        const favorites = getSaved();
+
+        setFavorite(favorites.some((item: any) => item.id === photo.id));
+
+    }, [])
+
 
     const getSaved = () => {
         let init = localStorage.getItem("saved");
@@ -52,9 +58,9 @@ function Photo(props: { photo: PhotoTest }) {
                     className=" rounded-t-lg"
                 />
                 <Image
-                    loading="lazy"
-                    fill
-                    src={photo.urls.regular}
+                    height={300}
+                    width={300}
+                    src={photo.urls.small}
                     alt={photo.alt_description || "Image"}
                     className="object-cover object-middle h-full w-full absolute top-0 left-0 rounded-t-lg"
                 />

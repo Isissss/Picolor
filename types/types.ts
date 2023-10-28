@@ -1,6 +1,6 @@
 import { Vec3 } from "node-vibrant/lib/color";
 
-export type PhotoTest = {
+export type PhotoType = {
     id: string;
     user: string;
     blur_hash: string;
@@ -9,6 +9,7 @@ export type PhotoTest = {
     height: number;
     urls: {
         regular: string;
+        small: string;
     };
     colors: ColorList[];
 }

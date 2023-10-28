@@ -10,11 +10,14 @@ function CopyColors(props: {
     const colors = props.colors.map((color: any) => color.hex).join(', ');
 
     useEffect(() => {
+
         if (hasCopied) {
             setTimeout(() => {
                 setHasCopied(false);
             }, 1500);
         }
+
+
     }, [hasCopied]);
 
     const copyColors = () => {
