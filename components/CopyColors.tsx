@@ -6,18 +6,15 @@ import { HiOutlineClipboardCopy } from "react-icons/hi";
 function CopyColors(props: {
     colors: any;
 }) {
-    const [hasCopied, setHasCopied] = useState(false)
-    const colors = props.colors.map((color: any) => color.hex).join(', ');
+    const [hasCopied, setHasCopied] = useState(false);
+    const colors = props.colors.map((color: any) => color.hex).join(', '); 
 
-    useEffect(() => {
-
+    useEffect(() => { 
         if (hasCopied) {
             setTimeout(() => {
                 setHasCopied(false);
             }, 1500);
-        }
-
-
+        } 
     }, [hasCopied]);
 
     const copyColors = () => {

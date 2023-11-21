@@ -21,8 +21,8 @@
     "unsplash-js": "^7.0.15"
   },
   "devDependencies": {
+    "@types/react": "^18.2.33",
     "@types/node": "18.11.3",
-    "@types/react": "18.0.21",
     "@types/react-dom": "18.0.6",
     "autoprefixer": "^10.4.12",
     "postcss": "^8.4.18",

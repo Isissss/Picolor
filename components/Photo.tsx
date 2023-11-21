@@ -6,43 +6,33 @@ import { Blurhash } from "react-blurhash";
 import { BsBookmarkHeart, BsBookmarkHeartFill } from "react-icons/bs";
 import { Tooltip } from 'react-tooltip'
 import { PhotoType } from "../types/types";
+import { useFavorites } from '../app/templates/Layout';
 
 function Photo(props: { photo: PhotoType }) {
     if (!props) return null;
-    const [favorite, setFavorite] = useState(false);
+
+    const photo = props.photo;
+    const { favorites, setFavorites } = useFavorites();
+    const [isFavorite, setIsFavorite] = useState(false);
 
     useEffect(() => {
-        const favorites = getSaved();
 
-        setFavorite(favorites.some((item: any) => item.id === photo.id));
+        setIsFavorite(favorites?.some((item: any) => item.id === photo.id));
 
-    }, [])
+    }, [favorites, photo])
 
 
-    const getSaved = () => {
-        let init = localStorage.getItem("saved");
-        if (init && init !== "undefined") {
-            return JSON.parse(init);
-        } else {
-            return [];
-        }
-    }
 
     const save = () => {
-        const initial = getSaved();
-
-        if (favorite) {
-            const newSaved = initial.filter((item: any) => item.id !== photo.id);
-            localStorage.setItem("saved", JSON.stringify(newSaved));
-
+        if (isFavorite) {
+            const filtered = favorites.filter((item: any) => item.id !== photo.id);
+            setFavorites(filtered);
         } else {
-            localStorage.setItem("saved", JSON.stringify([...initial, photo]));
+            setFavorites([...favorites, photo]);
         }
-
-        setFavorite(!favorite);
-
+        setIsFavorite(!isFavorite);
     };
-    const photo = props.photo;
+
 
     return (
         <div className="group flex flex-col justify-items-center bg-slate-100 dark:bg-slate-800 rounded-lg ring-2 ring-slate-400/5 dark:ring-slate-900/5 shadow-md p-1">
@@ -60,14 +50,15 @@ function Photo(props: { photo: PhotoType }) {
                 <Image
                     height={300}
                     width={300}
-                    src={photo.urls.small}
+                    loading='lazy'
+                    src={photo.urls.regular}
                     alt={photo.alt_description || "Image"}
-                    className="object-cover object-middle h-full w-full absolute top-0 left-0 rounded-t-lg"
+                    className="object-cover object-middle h-full w-full absolute inset-0 rounded-t-lg"
                 />
 
                 <div>
-                    <button data-tooltip-id={`save${photo.id}`} data-tooltip-content={favorite ? "Remove from favorites" : "Save for later"} onClick={() => save()} className={`absolute ${favorite ? 'block' : 'hidden'} group-hover:block top-2 right-2 p-2 bg-gray-800/60 rounded-full hover:bg-gray-800/90`}>
-                        {favorite ? <BsBookmarkHeartFill /> : <BsBookmarkHeart />}
+                    <button data-tooltip-id={`save${photo.id}`} data-tooltip-content={isFavorite ? "Remove from favorites" : "Save for later"} onClick={() => save()} className={`absolute  top-2 right-2 p-2 bg-gray-800/60 rounded-full hover:bg-gray-800/90`}>
+                        {isFavorite ? <BsBookmarkHeartFill /> : <BsBookmarkHeart />}
                     </button>
                     <Tooltip id={`save${photo.id}`} style={{ background: '#222' }} />
                 </div>

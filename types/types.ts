@@ -11,11 +11,11 @@ export type PhotoType = {
         regular: string;
         small: string;
     };
-    colors: ColorList[];
+    colors: ColorType[];
 }
 
 
-export type ColorList = {
+export type ColorType = {
     hex: string,
     hsl: Vec3,
     name: string

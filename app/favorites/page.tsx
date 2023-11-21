@@ -3,35 +3,31 @@ import { useState } from "react";
 import Photo from "../../components/Photo";
 import { useEffect } from "react";
 import Pagination from "../../components/Pagination";
+import { useFavorites } from "../templates/Layout";
 
-function Favorites() {
-    const [favorites, setFavorites] = useState(null) as any;
+const PER_PAGE = 10;
+
+function FFavorites() {
+    const { favorites } = useFavorites();
+    const [shownFavorites, setShownFavorites] = useState([]) as any;
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+ 
 
-    useEffect(() => {
-        const favorites = localStorage.getItem('saved');
-
-        if (!favorites || favorites === 'undefined') {
-            setFavorites([]);
-
-
-        } else {
-            const init = JSON.parse(favorites);
-            const totalSaved = init.length;
-            setTotalPages(Math.ceil(totalSaved / 10));
-
-            setFavorites(init.splice(((page - 1) * 10), 10));
+    useEffect(() => { 
+        if (favorites) {
+            const start = (page - 1) * PER_PAGE;
+            const end = start + PER_PAGE;
+            const shown = favorites.slice(start, end);
+            setShownFavorites(shown);
+            setTotalPages(Math.ceil(favorites.length / PER_PAGE));
         }
-
-
-    }, [page])
-
+    }, [favorites, page]);
 
 
     if (!favorites) {
         return <>
-            <p className="text-gray-500 animate-pulse">Checking favorites...</p>
+            <p className="text-gray-500 animate-pulse">Checking favorites... Hold on!</p>
         </>
     }
 
@@ -43,7 +39,7 @@ function Favorites() {
 
     return <><div className="flex justify-items-center flex-col">
         <div className="grid xl:grid-cols-5 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-            {favorites && favorites.map((item: any) => {
+            {shownFavorites && shownFavorites.map((item: any) => {
                 return <Photo key={item.id} photo={item} />
             })
             }
@@ -52,25 +48,11 @@ function Favorites() {
 
         <div style={{ position: "relative", display: "block", overflow: "hidden" }}>
             <div className="flex justify-center items-center mt-4">
-                <Pagination nextPage={page + 1 > totalPages} page={page} prevPage={page == 1} changePage={setPage} favorites={true} />
-                {/* <button onClick={() => setPage(page - 1)} disabled={page == 1} className="disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center px-4 py-2 mx-1 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-
-                    <svg aria-hidden="true" className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M7.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l2.293 2.293a1 1 0 010 1.414z" clipRule="evenodd"></path></svg>
-                    Previous
-
-                </button>
-
-                <button onClick={() => setPage(page + 1)} disabled={page + 1 > totalPages} className="disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center px-4 py-2 mx-1 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-
-                    Next
-                    <svg aria-hidden="true" className="w-5 h-5 ml-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
-
-                </button> */}
-
+                <Pagination nextPage={page + 1 > totalPages} page={page} changePage={setPage} favorites={true} />
             </div>
         </div >
 
     </>
 
 }
-export default Favorites
+export default FFavorites

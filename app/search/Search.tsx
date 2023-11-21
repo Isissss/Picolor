@@ -1,8 +1,12 @@
 'use client'
 import React, { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
-import { BsDice5 } from "react-icons/bs";
 import { Tooltip } from 'react-tooltip'
+import { OrderBy } from "unsplash-js";
+import Link from "next/link";
+import { VscFlame } from "react-icons/vsc";
+import { BsDice1, BsDice6 } from "react-icons/bs";
+import { revalidatePath } from "next/cache";
 
 function Search() {
     const [search, setSearch] = useState("");
@@ -28,9 +32,11 @@ function Search() {
             </div>
         </form>
         <div className="flex justify-self-center">
-            <button data-tooltip-id="random-search" data-tooltip-content="Random Search" className="rounded-lg bg-blue-600 hover:bg-blue-700 p-4 mx-1 text-lg" onClick={() => { router.push("/search/random"); router.refresh() }}> <BsDice5 />
-            </button>
-            <Tooltip id="random-search" style={{ background: '#222' }} />
+            <button onClick={(e) => {
+                router.push(`/search/random`)
+                router.refresh()
+            }} className="flex justify-center items-center rounded-lg bg-blue-600 hover:bg-blue-700 h-[52px] w-[52px] mx-1 text-lg" aria-label="Search for trending images"> <BsDice6 />  </button>
+
         </div>
     </div>)
 }
